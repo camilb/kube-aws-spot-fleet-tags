@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: spot-fleet-tags
+  namespace: kube-system
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: spot-fleet-tags
+      annotations:
+        iam.amazonaws.com/role: your-role #to be used with kube2iam
+    spec:
+      containers:
+      - name: spot-fleet-tags
+        image: camil/kube-aws-spot-fleet-tags:0.1
+        env:
+          - name: REGION
+            value: "us-east-1"
+          - name: REQ_ID
+            value: "spot-request-id"
+          - name: EC2_TAG1
+            value: "Application:Kubernetes"
+          - name: EC2_TAG2
+            value: "Role:Worker"
+          - name: EC2_TAG3
+            value: "SubRole:Something"
+          - name: EC2_TAG4
+            value: "Environment:Production"
+        imagePullPolicy: Always
